@@ -11,6 +11,7 @@ export const verifyToken = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
         req.userId = decodedToken.user_id;
         req.userType = decodedToken.user_type;
+        req.token = token;
         next();
     } catch (err) {
         return res.status(401).json({

@@ -1,34 +1,35 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
+import express from "express"
+import cors from "cors"
+import bodyParser from "body-parser"
 import dotenv from 'dotenv'
 dotenv.config()
-import connectDB from './config/db.config.js'
-const DATABASE_URL = process.env.DATABASE_URL;
+import connectDB from "./config/db.config.js"
 import { errorHandler } from './middleware/errorHandler.js';
 import createHttpError from 'http-errors';
-import userRoutes from './routes/userRoutes.js'
+import blogRoutes from "./routes/blogRoutes.js"
+const DATABASE_URL = process.env.DATABASE_URL
 
-const PORT = process.env.PORT || 3003
 const corsOptions = {
     origin: "http://localhost:3000",
 };
+
 const app = express()
-app.use(express.json());
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 app.use(cors(corsOptions))
 
-
-app.use('/api/v1.0/blogsite/user', userRoutes)
+// blog routes
+app.use('/api/v1.0/blogsite/blogs', blogRoutes)
 
 connectDB(DATABASE_URL)
+
 /** Error Handler */
 app.use((req, res, next) => {
     next(createHttpError(404, 'Request URL not found'));
 });
 
 app.use(errorHandler)
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
-})
+
+export default app
+
